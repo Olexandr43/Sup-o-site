@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Форма оплати</title>
     <style>
         /* Стилі для карточки */
@@ -16,6 +17,13 @@
         /* Стилі для інпутів */
         input[type="text"], select, input[type="password"] {
             width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        input[id="cardNumber"], input[id="cardType"], input[id="cvv"], select, input[type="password"] {
+            width: calc(94.5% - 5px); /* Розрахунок ширини для полів вводу, щоб вони були рівні за шириною з кнопкою */
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ccc;
@@ -44,6 +52,11 @@
             color: red;
             margin-top: 5px;
         }
+        /* Стили для неактивной кнопки */
+input[type="submit"]:disabled {
+    background-color: #ccc; /* Серый цвет кнопки */
+    cursor: not-allowed; /* Запрет на использование указателя мыши */
+}
     </style>
 </head>
 <body>
@@ -86,15 +99,32 @@
             
 
             <label for="cvv">CVV код:</label>
-            <input type="password" id="cvv" pattern="[0-9]{3}" maxlength="3" required placeholder="***"><br>
+            <input type="password" id="cvv" pattern="[0-9]{3}" maxlength="3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required placeholder="***"><br>
 
             <input type="submit" value="Оплатити" id="submitButton" disabled>
             <div class="error-message" id="errorMessage"></div>
             <div class="expiry-message" id="expiryMessage"></div>
+            <div id="paymentResult" style="display: none; border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                Оплата пройшла успішно!
+            </div>
+            
         </form>
     </div>
 
     <script>
+        var paymentResult = document.getElementById("paymentResult");
+
+submitButton.addEventListener("click", function(event) {
+    event.preventDefault(); // Заборона стандартної дії форми
+
+    // Відображення блоку з результатом оплати
+    paymentResult.style.display = "block";
+});
+
+    </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
         var cardNumberInput = document.getElementById("cardNumber");
         var cardTypeInput = document.getElementById("cardType");
         var expiryMonthInput = document.getElementById("expiryMonth");
@@ -102,66 +132,75 @@
         var cvvInput = document.getElementById("cvv");
         var submitButton = document.getElementById("submitButton");
         var errorMessage = document.getElementById("errorMessage");
-
+        var expiryMessage = document.getElementById("expiryMessage");
+    
+        // Слушаем изменения в полях ввода номера карты
         cardNumberInput.addEventListener("input", function() {
-            var cardNumber = cardNumberInput.value.replace(/\s/g, ''); // Вилучення пробілів
+            var cardNumber = cardNumberInput.value.trim();
             var firstDigit = cardNumber.charAt(0);
+            var cardType = "";
+    
+            if (firstDigit === '4') {
+                cardType = 'VISA';
+            } else if (firstDigit === '5') {
+                cardType = 'Mastercard';
+            } else if (firstDigit === '9') {
+                cardType = 'Простір';
+            } else {
+                cardType = 'Невідомо';
+            }
+    
+            cardTypeInput.value = cardType; // Установка типа карты
+    
+            validateForm(); // Проверка формы после определения типа карты
+        });
+    
+        // Слушаем изменения в полях ввода месяца и года
+        expiryMonthInput.addEventListener("change", validateForm);
+        expiryYearInput.addEventListener("change", validateForm);
+    
+        // Слушаем изменения в поле ввода CVV-кода
+        cvvInput.addEventListener("input", validateForm);
+
+        // Функция для проверки заполнения формы
+        function validateForm() {
+            var cardNumber = cardNumberInput.value.trim();
+            var expiryMonth = expiryMonthInput.value;
+            var expiryYear = expiryYearInput.value;
+            var cvv = cvvInput.value.trim();
+            var currentDate = new Date();
+            var currentMonth = currentDate.getMonth() + 1;
+            var currentYear = currentDate.getFullYear();
+    
+            // Проверка наличия ошибок в номере карты
             if (cardNumber.length === 16) {
-                if (firstDigit === '4') {
-                    cardTypeInput.value = 'VISA';
-                } else if (firstDigit === '5') {
-                    cardTypeInput.value = 'Mastercard';
-                } else if (firstDigit === '9') {
-                    cardTypeInput.value = 'Простір';
-                } else {
-                    cardTypeInput.value = 'Невідомо';
-                }
                 errorMessage.innerText = "";
             } else {
-                if (firstDigit === '4') {
-                    cardTypeInput.value = 'VISA';
-                } else if (firstDigit === '5') {
-                    cardTypeInput.value = 'Mastercard';
-                } else if (firstDigit === '9') {
-                    cardTypeInput.value = 'Простір';
-                } else {
-                    cardTypeInput.value = 'Невідомо';
-                }
                 errorMessage.innerText = "Номер карти повинен містити 16 цифр";
-                submitButton.disabled = true;
             }
-        });
-    </script>
-    <script>
-        // Получаем ссылки на элементы формы
-    var expiryMonthInput = document.getElementById("expiryMonth");
-    var expiryYearInput = document.getElementById("expiryYear");
-    var submitButton = document.getElementById("submitButton");
-    var expiryMessage = document.getElementById("expiryMessage");
+    
+            // Проверка срока действия карты
+            if (parseInt(expiryYear) < currentYear || (parseInt(expiryYear) === currentYear && parseInt(expiryMonth) < currentMonth)) {
+                expiryMessage.innerText = "Карта просрочена";
+                submitButton.disabled = true; // Выключаем кнопку при просрочке
+            } else {
+                expiryMessage.innerText = "";
+                validateButtonActivation(); // Проверка наличия всех данных для активации кнопки
+            }
 
-    // Слушаем изменения в поле выбора месяца
-    expiryMonthInput.addEventListener("change", validateExpiryDate);
-
-    // Слушаем изменения в поле выбора года
-    expiryYearInput.addEventListener("change", validateExpiryDate);
-
-    // Функция для проверки срока действия карты
-    function validateExpiryDate() {
-        var selectedMonth = expiryMonthInput.value;
-        var selectedYear = expiryYearInput.value;
-
-        var currentDate = new Date();
-        var currentMonth = currentDate.getMonth() + 1; // Месяцы в JavaScript нумеруются с 0
-        var currentYear = currentDate.getFullYear();
-
-        if (parseInt(selectedYear) < currentYear || (parseInt(selectedYear) === currentYear && parseInt(selectedMonth) < currentMonth)) {
-            expiryMessage.innerText = "Карта просрочена";
-            submitButton.disabled = true;
-        } else {
-            expiryMessage.innerText = "";
-            submitButton.disabled = false;
+            // Проверка наличия всех данных для активации кнопки
+            function validateButtonActivation() {
+                if (cardNumber !== "" && expiryMonth !== "" && expiryYear !== "" && cvv.length === 3 && errorMessage.innerText === "" && expiryMessage.innerText === "") {
+                    submitButton.disabled = false; // Включаем кнопку
+                } else {
+                    submitButton.disabled = true; // Выключаем кнопку
+                }
+            }
         }
-    }
-    </script>
+    });
+</script>
+
+
+    
 </body>
 </html>
