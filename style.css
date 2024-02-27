@@ -1,6 +1,6 @@
 /* Стилі для фону */
 body {
-    background: linear-gradient(to left, #000000, #ffffff); /* Градієнтний фон */
+    background: linear-gradient(to left, #e8eeb2, #ffffff); /* Градієнтний фон */
     background-size: cover; /* Заповнення фону */
     background-attachment: fixed; /* Фіксація фону при прокрутці */
     font-family: Arial, sans-serif; /* Font family */
