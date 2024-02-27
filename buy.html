@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма оплати</title>
+    <style>
+        /* Стилі для карточки */
+        .card {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Стилі для інпутів */
+        input[type="text"], select, input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        /* Стилі для кнопки */
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        /* Стилі для виведення помилки */
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        .expiry-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Оплата кредитною карткою</h2>
+        <form>
+            <label for="cardNumber">Номер картки:</label>
+            <input type="text" id="cardNumber" pattern="[0-9]{16}" maxlength="16" required><br>
+
+            <label for="cardType">Тип картки:</label>
+            <input type="text" id="cardType" disabled required><br>
+
+            <label for="expiryDate">Термін дії:</label>
+            <select id="expiryMonth" required>
+                <option disabled selected value="">Місяць</option>
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+            <select id="expiryYear" required>
+                <option disabled selected value="">Рік</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+            </select><br>
+
+            
+
+            <label for="cvv">CVV код:</label>
+            <input type="password" id="cvv" pattern="[0-9]{3}" maxlength="3" required placeholder="***"><br>
+
+            <input type="submit" value="Оплатити" id="submitButton" disabled>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="expiry-message" id="expiryMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        var cardNumberInput = document.getElementById("cardNumber");
+        var cardTypeInput = document.getElementById("cardType");
+        var expiryMonthInput = document.getElementById("expiryMonth");
+        var expiryYearInput = document.getElementById("expiryYear");
+        var cvvInput = document.getElementById("cvv");
+        var submitButton = document.getElementById("submitButton");
+        var errorMessage = document.getElementById("errorMessage");
+
+        cardNumberInput.addEventListener("input", function() {
+            var cardNumber = cardNumberInput.value.replace(/\s/g, ''); // Вилучення пробілів
+            var firstDigit = cardNumber.charAt(0);
+            if (cardNumber.length === 16) {
+                if (firstDigit === '4') {
+                    cardTypeInput.value = 'VISA';
+                } else if (firstDigit === '5') {
+                    cardTypeInput.value = 'Mastercard';
+                } else if (firstDigit === '9') {
+                    cardTypeInput.value = 'Простір';
+                } else {
+                    cardTypeInput.value = 'Невідомо';
+                }
+                errorMessage.innerText = "";
+            } else {
+                if (firstDigit === '4') {
+                    cardTypeInput.value = 'VISA';
+                } else if (firstDigit === '5') {
+                    cardTypeInput.value = 'Mastercard';
+                } else if (firstDigit === '9') {
+                    cardTypeInput.value = 'Простір';
+                } else {
+                    cardTypeInput.value = 'Невідомо';
+                }
+                errorMessage.innerText = "Номер карти повинен містити 16 цифр";
+                submitButton.disabled = true;
+            }
+        });
+    </script>
+    <script>
+        // Получаем ссылки на элементы формы
+    var expiryMonthInput = document.getElementById("expiryMonth");
+    var expiryYearInput = document.getElementById("expiryYear");
+    var submitButton = document.getElementById("submitButton");
+    var expiryMessage = document.getElementById("expiryMessage");
+
+    // Слушаем изменения в поле выбора месяца
+    expiryMonthInput.addEventListener("change", validateExpiryDate);
+
+    // Слушаем изменения в поле выбора года
+    expiryYearInput.addEventListener("change", validateExpiryDate);
+
+    // Функция для проверки срока действия карты
+    function validateExpiryDate() {
+        var selectedMonth = expiryMonthInput.value;
+        var selectedYear = expiryYearInput.value;
+
+        var currentDate = new Date();
+        var currentMonth = currentDate.getMonth() + 1; // Месяцы в JavaScript нумеруются с 0
+        var currentYear = currentDate.getFullYear();
+
+        if (parseInt(selectedYear) < currentYear || (parseInt(selectedYear) === currentYear && parseInt(selectedMonth) < currentMonth)) {
+            expiryMessage.innerText = "Карта просрочена";
+            submitButton.disabled = true;
+        } else {
+            expiryMessage.innerText = "";
+            submitButton.disabled = false;
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+
+<style>
+.form-width {max-width: 25rem;}
+.has-float-label {
+ position: relative; }
+ .has-float-label label {
+ position: absolute;
+ left: 0;
+ top: 0;
+ cursor: text;
+ font-size: 75%;
+ opacity: 1;
+ -webkit-transition: all .2s;
+ transition: all .2s;
+ top: -.5em;
+ left: 0.75rem;
+ z-index: 3;
+ line-height: 1;
+ padding: 0 1px; }
+ .has-float-label label::after {
+ content: " ";
+ display: block;
+ position: absolute;
+ background: white;
+ height: 2px;
+ top: 50%;
+ left: -.2em;
+ right: -.2em;
+ z-index: -1; }
+ .has-float-label .form-control::-webkit-input-placeholder {
+ opacity: 1;
+ -webkit-transition: all .2s;
+ transition: all .2s; }
+ .has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+ opacity: 0; }
+ .has-float-label .form-control:placeholder-shown:not(:focus) + label {
+ font-size: 150%;
+ opacity: .5;
+ top: .3em; }
+
+.input-group .has-float-label {
+ display: table-cell; }
+ .input-group .has-float-label .form-control {
+ border-radius: 0.25rem; }
+ .input-group .has-float-label:not(:last-child) .form-control {
+ border-bottom-right-radius: 0;
+ border-top-right-radius: 0; }
+ .input-group .has-float-label:not(:first-child) .form-control {
+ border-bottom-left-radius: 0;
+ border-top-left-radius: 0;
+ margin-left: -1px; }
+</style>
+
+<div class="p-x-1 p-y-3">
+ <form class="card card-block m-x-auto bg-faded form-width">
+ <legend class="m-b-1 text-xs-center">Рєєстрація</legend>
+ <div class="form-group input-group">
+ <span class="has-float-label">
+ <input class="form-control" id="first" type="text" placeholder="Имя"/>
+ <label for="first">Ім`я</label>
+ </span>
+ <span class="has-float-label">
+ <input class="form-control" id="last" type="text" placeholder="Фамилия"/>
+ <label for="last">Прізвище</label>
+ </span>
+ </div>
+ <div class="form-group input-group">
+ <span class="input-group-addon">@</span>
+ <span class="has-float-label">
+ <input class="form-control" id="email" type="email" placeholder="name@example.com"/>
+ <label for="email">E-mail</label>
+ </span>
+ </div>
+ <div class="form-group has-float-label">
+ <input class="form-control" id="password" type="password" placeholder="••••••••"/>
+ <label for="password">Пароль</label>
+ </div>
+ <div class="form-group has-float-label">
+ <input class="form-control" id="password" type="password" placeholder="••••••••"/>
+ <label for="password">Пароль повторно</label>
+ </div>
+ <div class="form-group has-float-label">
+ <select class="form-control custom-select" id="country">
+ <option>Росія</option>
+ <option selected>Україна</option>
+ <option>Польща</option>
+ </select>
+ <label for="country">Країна</label>
+ </div>
+ <div class="form-group">
+ <label class="custom-control custom-checkbox">
+ <input class="custom-control-input" type="checkbox"/>
+ <span class="custom-control-indicator"></span>
+ <span class="custom-control-description">Підписатися на розсилку</span>
+ </label>
+ </div>
+ <div class="text-xs-center">
+ <button class="btn btn-block btn-primary" id="submitBtn" type="button" disabled>Рєєстрація</button>
+ </div>
+ </form>
+</div>
+<script>
+        var firstNameInput = document.getElementById("first");
+        var lastNameInput = document.getElementById("last");
+        var emailInput = document.getElementById("email");
+        var submitBtn = document.getElementById("submitBtn");
+        var countryInput = document.getElementById("country");
+
+        firstNameInput.addEventListener("input", checkForm);
+        lastNameInput.addEventListener("input", checkForm);
+        emailInput.addEventListener("input", checkForm);
+        countryInput.addEventListener("select", checkForm);
+
+        function checkForm() {
+            if (firstNameInput.value.trim() !== "" && lastNameInput.value.trim() !== "" && emailInput.value.trim() !== "" && countryInput.value.trim() !== "") {
+                submitBtn.removeAttribute("disabled");
+            } else {
+                submitBtn.setAttribute("disabled", "disabled");
+            }
+        }
+
+    submitBtn.addEventListener("click", function() {
+        saveData();
+    });
+
+    function saveData() {
+            var firstName = firstNameInput.value;
+            var lastName = lastNameInput.value;
+            var email = emailInput.value;
+            var country = countryInput.value;
+
+            // Здійснюємо перехід на сторінку "menu.html"
+            window.location.href = "menu.html?firstName=" + firstName + "&lastName=" + lastName + "&email=" + email + "&country=" + country; 
+        }
+</script>

@@ -1,0 +1,33 @@
+/* Стилі для фону */
+body {
+    background: linear-gradient(to left, #000000, #ffffff); /* Градієнтний фон */
+    background-size: cover; /* Заповнення фону */
+    background-attachment: fixed; /* Фіксація фону при прокрутці */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+/* Стилі для заголовка сторінки */
+h1 {
+    text-align: center; /* Вирівнювання тексту по центру */
+    font-size: 36px; /* Розмір шрифту заголовка */
+    color: #333; /* Колір тексту заголовка */
+    margin-top: 50px; /* Відступ зверху */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Тінь тексту */
+}
+
+header {
+    text-align: center;
+    background-color: #147a00; /* Header background color */
+    color: #fff; /* Header text color */
+    padding: 1em;
+    width: 100%;
+}
+
+section {
+    padding: 20px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}

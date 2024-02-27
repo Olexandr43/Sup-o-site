@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню</title>
+    <style>
+        /* Загальні стилі */
+
+        /* Стилі для розгортаючого меню */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px; /* Додатковий відступ між кнопкою меню та зображенням */
+        }
+
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Анімація зміни прозорості */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Стилі для зображення супів */
+        #soupImage {
+            width: 800px; /* Ширина зображення супів */
+            height: 600px; /* Висота зображення супів */
+            display: none; /* Початково зображення супів приховано */
+        }
+
+        #soupText {
+            display: none; /* Початково текст супів приховано */
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>
+        СУП-О-САЙТ
+    </h1>
+</header>
+    <h2>Дані, що були введені:</h2>
+    <p>Ім'я: <span id="firstName"></span></p>
+    <p>Прізвище: <span id="lastName"></span></p>
+    <p>Електронна пошта: <span id="email"></span></p>
+    <p>Країна: <span id="country"></span></p>
+
+    <div class="dropdown">
+        <button onclick="toggleDropdown()" class="dropbtn">Меню</button>
+        <div id="myDropdown" class="dropdown-content">
+            <a href="#" onclick="displaySoup('meatballs.jpg', 'Суп з фрикадельками')">Суп з фрикадельками</a>
+            <a href="#" onclick="displaySoup('sirniy.jpg', 'Сирний суп')">Сирний суп</a>
+            <a href="#" onclick="displaySoup('goroh.jpg', 'Гороховий суп з м`ясом')">Гороховий суп з м`ясом</a>
+        </div>
+    </div>
+
+    <img id="soupImage">
+    <p id="soupText"></p>
+
+    <script>
+        var dropdown = document.getElementById("myDropdown");
+
+        function toggleDropdown() {
+            dropdown.classList.toggle("show");
+        }
+
+        function displaySoup(imageUrl, text) {
+            var soupImage = document.getElementById('soupImage');
+            var soupText = document.getElementById('soupText');
+            soupImage.src = imageUrl;
+            soupImage.style.display = "block"; // Відображення зображення супу
+            soupText.innerText = text;
+            soupText.style.display = "block"; // Відображення тексту супу
+            dropdown.classList.remove("show"); // Закриття меню після вибору пункту
+        }
+
+        // Отримання параметрів запиту з URL-адреси
+        var params = new URLSearchParams(window.location.search);
+        var firstName = params.get('firstName');
+        var lastName = params.get('lastName');
+        var email = params.get('email');
+        var country = params.get('country');
+
+        // Відображення отриманих даних на сторінці
+        document.getElementById('firstName').innerText = firstName;
+        document.getElementById('lastName').innerText = lastName;
+        document.getElementById('email').innerText = email;
+        document.getElementById('country').innerText = country;
+    </script>
+        <button onclick="openRegistration()">Замовити</button>
+        <script>
+            function openRegistration() {
+                window.open("buy.html", "_blank");
+            }
+        </script>
+</body>
+</html>
