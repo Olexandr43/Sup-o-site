@@ -131,7 +131,8 @@
         <button onclick="openRegistration()">Замовити</button>
         <script>
             function openRegistration() {
-                window.open("buy.html", "_blank");
+               // window.open("buy.html", "_blank");
+                window.location.href = "buy.html?firstName=" + firstName + "&lastName=" + lastName + "&email=" + email + "&country=" + country, "_blank"; 
             }
         </script>
 </body>
