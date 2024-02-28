@@ -103,6 +103,7 @@
  <div class="text-xs-center">
  <button class="btn btn-block btn-primary" id="submitBtn" type="submit" disabled>Рєєстрація</button>
  <div id="passwordMatchError" style="color: red;"></div>
+ <div id="passwordDifficulty" style="color: rgb(7, 0, 37);"></div>
  </div>
  </form>
 </div>
@@ -123,6 +124,67 @@ function checkPasswords() {
         checkForm(); // Проверка остальных полей формы
     }
 }
+
+var passwordInput = document.getElementById("password");
+var confirmPasswordInput = document.getElementById("confirmPassword");
+var passwordMatchError = document.getElementById("passwordMatchError");
+
+passwordInput.addEventListener("input", checkPasswords);
+confirmPasswordInput.addEventListener("input", checkPasswords);
+
+function checkPasswords() {
+    if (passwordInput.value !== confirmPasswordInput.value) {
+        passwordMatchError.textContent = "Пароли не совпадают";
+        submitBtn.setAttribute("disabled", "disabled");
+    } else {
+        passwordMatchError.textContent = "";
+        checkForm(); // Проверка остальных полей формы
+        checkPasswordStrength(); // Проверка сложности пароля
+    }
+}
+
+function checkPasswordStrength() {
+    var password = passwordInput.value;
+    var strength = 0;
+
+    // Проверка длины пароля
+    if (password.length >= 8) {
+        strength += 1;
+    }
+
+    // Проверка наличия цифр в пароле
+    if (/\d/.test(password)) {
+        strength += 1;
+    }
+
+    // Проверка наличия символов верхнего регистра в пароле
+    if (/[A-Z]/.test(password)) {
+        strength += 1;
+    }
+
+    // Проверка наличия символов нижнего регистра в пароле
+    if (/[a-z]/.test(password)) {
+        strength += 1;
+    }
+
+    // Проверка наличия специальных символов в пароле
+    if (/[\W_]/.test(password)) {
+        strength += 1;
+    }
+
+    // Отображение уровня сложности пароля
+    if (strength < 3) {
+        passwordDifficulty.textContent = "Слабый пароль";
+        submitBtn.setAttribute("disabled", "disabled");
+    } else if (strength >= 3 && strength < 5) {
+        passwordDifficulty.textContent = "Средний пароль";
+        submitBtn.removeAttribute("disabled");
+    } else {
+        passwordDifficulty.textContent = "Сильный пароль";
+        submitBtn.removeAttribute("disabled");
+    }
+}
+
 
         var firstNameInput = document.getElementById("first");
         var lastNameInput = document.getElementById("last");
