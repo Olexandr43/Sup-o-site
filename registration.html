@@ -101,7 +101,7 @@
  </label>
  </div>
  <div class="text-xs-center">
- <button class="btn btn-block btn-primary" id="submitBtn" type="button" disabled>Рєєстрація</button>
+ <button class="btn btn-block btn-primary" id="submitBtn" type="submit" disabled>Рєєстрація</button>
  </div>
  </form>
 </div>
@@ -125,17 +125,27 @@
             }
         }
 
-    submitBtn.addEventListener("click", function() {
-        saveData();
-    });
+        var submitBtn = document.getElementById("submitBtn");
 
-    function saveData() {
-            var firstName = firstNameInput.value;
-            var lastName = lastNameInput.value;
-            var email = emailInput.value;
-            var country = countryInput.value;
+submitBtn.addEventListener("click", function(event) {
+    event.preventDefault(); // Отмена стандартной отправки формы
 
-            // Здійснюємо перехід на сторінку "menu.html"
-            window.location.href = "menu.html?firstName=" + firstName + "&lastName=" + lastName + "&email=" + email + "&country=" + country; 
-        }
+    saveData(); // Сохранение данных при нажатии на кнопку
+});
+
+function saveData() {
+    var firstName = firstNameInput.value;
+    var lastName = lastNameInput.value;
+    var email = emailInput.value;
+    var country = countryInput.value;
+
+    // Сохранение данных в локальном хранилище браузера
+    localStorage.setItem("firstName", firstName);
+    localStorage.setItem("lastName", lastName);
+    localStorage.setItem("email", email);
+    localStorage.setItem("country", country);
+
+    // Переход на страницу оплаты
+    window.location.href = "menu.html?firstName=" + firstName + "&lastName=" + lastName + "&email=" + email + "&country=" + country; 
+}
 </script>
