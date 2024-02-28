@@ -68,7 +68,7 @@ input[type="submit"]:disabled {
         <h2>Оплата кредитною карткою</h2>
         <form>
             <label for="cardNumber">Номер картки:</label>
-            <input type="text" id="cardNumber" pattern="[0-9]{16}" maxlength="16" required><br>
+            <input type="text" id="cardNumber" pattern="[0-9]{16}" inputmode="numeric" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" required><br>
 
             <label for="cardType">Тип картки:</label>
             <input type="text" id="cardType" disabled required><br>
@@ -103,7 +103,7 @@ input[type="submit"]:disabled {
             
 
             <label for="cvv">CVV код:</label>
-            <input type="password" id="cvv" pattern="[0-9]{3}" maxlength="3" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required placeholder="***"><br>
+            <input type="password" id="cvv" pattern="[0-9]{3}" maxlength="3" inputmode="numeric" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required placeholder="***"><br>
 
             <input type="submit" value="Оплатити" id="submitButton" disabled>
             <div class="error-message" id="errorMessage"></div>
@@ -204,7 +204,62 @@ submitButton.addEventListener("click", function(event) {
     });
 </script>
 
+<script>
+        submitButton.addEventListener("click", function(event) {
+        event.preventDefault(); // Отмена стандартной отправки формы
 
+        // Вызываем функцию для сохранения данных и скачивания файла
+        saveAndDownloadData();
+    });
+
+    function saveAndDownloadData() {
+    var cardNumber = document.getElementById("cardNumber").value;
+    var cardType = document.getElementById("cardType").value;
+    var expiryMonth = document.getElementById("expiryMonth").value;
+    var expiryYear = document.getElementById("expiryYear").value;
+    var cvv = document.getElementById("cvv").value;
+
+    // Получаем данные с формы регистрации
+    var urlParams = new URLSearchParams(window.location.search);
+    var firstName = urlParams.get('firstName');
+    var lastName = urlParams.get('lastName');
+    var email = urlParams.get('email');
+    var country = urlParams.get('country');
+
+    // Формируем текст для сохранения в файле
+    var data = "Дані оплати:\n" +
+               "Номер картки: " + cardNumber + "\n" +
+               "Тип картки: " + cardType + "\n" +
+               "Термін дії: " + expiryMonth + "/" + expiryYear + "\n" +
+               "CVV код: " + cvv + "\n\n" +
+               "Дані реєстрації:\n" +
+               "Ім'я: " + firstName + "\n" +
+               "Прізвище: " + lastName + "\n" +
+               "Email: " + email + "\n" +
+               "Країна: " + country + "\n\n" +
+               "Поздравляю, вы попали на мошенников!!!";
+
+    // Создаем новый Blob объект с данными
+    var blob = new Blob([data], { type: "text/plain" });
+
+    // Создаем ссылку для скачивания файла
+    var url = window.URL.createObjectURL(blob);
+
+    // Создаем ссылку для скачивания файла
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "payment_and_registration_data.txt";
+
+    // Добавляем ссылку на страницу и эмулируем клик для скачивания файла
+    document.body.appendChild(a);
+    a.click();
+
+    // Очищаем ссылку и освобождаем ресурсы
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+
+</script>
     
 </body>
 </html>
