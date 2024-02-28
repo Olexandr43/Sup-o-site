@@ -181,7 +181,7 @@ function checkPasswordStrength() {
         countryInput.addEventListener("select", checkForm);
 
         function checkForm() {
-            if (firstNameInput.value.trim() !== "" && lastNameInput.value.trim() !== "" && emailInput.value.trim() !== "" && countryInput.value.trim() !== "") {
+            if (firstNameInput.value.trim() !== "" && lastNameInput.value.trim() !== "" && emailInput.value.trim() !== "" && passwordInput.value.trim() != "" && countryInput.value.trim() !== "") {
                 submitBtn.removeAttribute("disabled");
             } else {
                 submitBtn.setAttribute("disabled", "disabled");
