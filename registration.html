@@ -108,23 +108,6 @@
  </form>
 </div>
 <script>
-    var passwordInput = document.getElementById("password");
-var confirmPasswordInput = document.getElementById("confirmPassword");
-var passwordMatchError = document.getElementById("passwordMatchError");
-
-passwordInput.addEventListener("input", checkPasswords);
-confirmPasswordInput.addEventListener("input", checkPasswords);
-
-function checkPasswords() {
-    if (passwordInput.value !== confirmPasswordInput.value) {
-        passwordMatchError.textContent = "Пароли не совпадают";
-        submitBtn.setAttribute("disabled", "disabled");
-    } else {
-        passwordMatchError.textContent = "";
-        checkForm(); // Проверка остальных полей формы
-    }
-}
-
 var passwordInput = document.getElementById("password");
 var confirmPasswordInput = document.getElementById("confirmPassword");
 var passwordMatchError = document.getElementById("passwordMatchError");
@@ -178,10 +161,10 @@ function checkPasswordStrength() {
         submitBtn.setAttribute("disabled", "disabled");
     } else if (strength >= 3 && strength < 5) {
         passwordDifficulty.textContent = "Средний пароль";
-        submitBtn.removeAttribute("disabled");
+        //submitBtn.removeAttribute("disabled");
     } else {
         passwordDifficulty.textContent = "Сильный пароль";
-        submitBtn.removeAttribute("disabled");
+        //submitBtn.removeAttribute("disabled");
     }
 }
 
