@@ -82,8 +82,8 @@
  <label for="password">Пароль</label>
  </div>
  <div class="form-group has-float-label">
- <input class="form-control" id="password" type="password" placeholder="••••••••"/>
- <label for="password">Пароль повторно</label>
+ <input class="form-control" id="confirmPassword" type="password" placeholder="••••••••"/>
+ <label for="confirmPassword">Пароль повторно</label>
  </div>
  <div class="form-group has-float-label">
  <select class="form-control custom-select" id="country">
@@ -102,10 +102,28 @@
  </div>
  <div class="text-xs-center">
  <button class="btn btn-block btn-primary" id="submitBtn" type="submit" disabled>Рєєстрація</button>
+ <div id="passwordMatchError" style="color: red;"></div>
  </div>
  </form>
 </div>
 <script>
+    var passwordInput = document.getElementById("password");
+var confirmPasswordInput = document.getElementById("confirmPassword");
+var passwordMatchError = document.getElementById("passwordMatchError");
+
+passwordInput.addEventListener("input", checkPasswords);
+confirmPasswordInput.addEventListener("input", checkPasswords);
+
+function checkPasswords() {
+    if (passwordInput.value !== confirmPasswordInput.value) {
+        passwordMatchError.textContent = "Пароли не совпадают";
+        submitBtn.setAttribute("disabled", "disabled");
+    } else {
+        passwordMatchError.textContent = "";
+        checkForm(); // Проверка остальных полей формы
+    }
+}
+
         var firstNameInput = document.getElementById("first");
         var lastNameInput = document.getElementById("last");
         var emailInput = document.getElementById("email");
